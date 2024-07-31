@@ -5,7 +5,7 @@ import { Grid } from "@mui/material";
 import VideocamIcon from '@mui/icons-material/Videocam';
 import VideocamOffIcon from '@mui/icons-material/VideocamOff';
 // import logo from "./assets/gdsc_logo_white.png";
-import logo from "./assets/logo svg.svg";
+import logo from "./assets/CAPCITI-LOGO-V3.jpg";
 
 import Accepted from "./Accepted"
 import { AcceptedTag, RefusedTag, AllreadyAcceptedTag } from "./Tags"
