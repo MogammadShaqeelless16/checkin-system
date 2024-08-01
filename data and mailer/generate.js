@@ -70,9 +70,15 @@ async function generateIDs(rows) {
 }
 
 // Function to generate QR codes
-async function generateQRCodes(rows, imagesFolder) {
+const generateQRCodes = async (rows, imagesFolder) => {
     for (const row of rows) {
-        await qrcode.toFile(`${imagesFolder}/${row.email}.png`, row.id);
+        const filePath = path.join(imagesFolder, `${row.email}.png`);
+        try {
+            await qrcode.toFile(filePath, row.id);
+            console.log(`QR code generated for ${row.email} at ${filePath}`);
+        } catch (error) {
+            console.error(`Error generating QR code for ${row.email}:`, error);
+        }
     }
 }
 
@@ -142,15 +148,20 @@ const Test = async () => {
     ensureImagesFolderExists(imagesFolder);
 
     const rows = await readCSV(inputFile);
-
     if (rows.length === 0) {
         console.log("No rows found in the input CSV.");
         return;
     }
 
     for (let row of rows) {
-        const id = await decodeQR(`${imagesFolder}/${row.email}.png`);
-        row.id = id;
+        const filePath = path.join(imagesFolder, `${row.email}.png`);
+        if (!fs.existsSync(filePath)) {
+            console.error(`File not found: ${filePath}`);
+            continue;
+        }
+
+        const id = await decodeQR(filePath);
+        row.id = id || 'QR code decode failed';
         row.checked = "false";
     }
 
